@@ -1,12 +1,10 @@
-add_rules("mode.debug", "mode.release")
+target("spirv-cross-xmake")
+    set_kind("static")
+    add_rules("mode.release")
+    set_languages("c99", "cxx17")
+    add_includedirs(".", {public = true})
 
-package("spirvcross_xmake")
-    add_deps("cmake")
-    set_sourcedir(path.join(os.scriptdir(), "."))
-    on_install(function (package)
-        local configs = {}
-        table.insert(configs, "-DCMAKE_BUILD_TYPE=" .. (package:debug() and "Debug" or "Release"))
-        table.insert(configs, "-DBUILD_SHARED_LIBS=" .. (package:config("shared") and "ON" or "OFF"))
-        import("package.tools.cmake").install(package, configs)
-    end)
-package_end()
+    add_files(
+		"spirv_parser.cpp",
+		"spirv_cross_parsed_ir.cpp",
+		"spirv_cfg.cpp")
